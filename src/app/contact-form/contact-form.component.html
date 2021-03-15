@@ -1,0 +1,25 @@
+<div class="container">
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        <mat-form-field class="input-fw">
+          <mat-label>Name</mat-label>
+          <input matInput placeholder="Type your name" [formControl]="name">
+          <mat-error *ngIf="name.invalid && name.errors.required">Name is required.</mat-error>
+          <mat-error *ngIf="name.invalid && name.errors.minlength">Name must be at least 6 characters long.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-fw">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="example@mail.com" [formControl]="email">
+            <mat-error *ngIf="email.invalid && email.errors.required">Email is required.</mat-error>
+            <mat-error *ngIf="email.invalid && email.errors.pattern">Please provide a valid email address.</mat-error>
+        </mat-form-field>
+      
+        <mat-form-field class="input-fw">
+          <mat-label>Message</mat-label>
+          <textarea matInput placeholder="Your message here ..." [formControl]="message"></textarea>
+          <mat-error *ngIf="message.invalid && message.errors.required">Message is required.</mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" [disabled]="!contactForm.valid" type="submit">Submit</button>
+      </form>
+</div>

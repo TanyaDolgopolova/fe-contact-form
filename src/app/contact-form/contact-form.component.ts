@@ -47,6 +47,7 @@ export class ContactFormComponent implements OnInit, OnDestroy {
     this.contactService.addContact(data)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(() => {
+        alert('Saved');
         this.contactForm.enable();
       }, 
       (err: HttpErrorResponse) => {

@@ -11,7 +11,7 @@
             <mat-label>Email</mat-label>
             <input matInput placeholder="example@mail.com" [formControl]="email">
             <mat-error *ngIf="email.invalid && email.errors.required">Email is required.</mat-error>
-            <mat-error *ngIf="email.invalid && email.errors.pattern">Please provide a valid email address.</mat-error>
+            <mat-error *ngIf="email.invalid && email.errors.email">Please provide a valid email address.</mat-error>
         </mat-form-field>
       
         <mat-form-field class="input-fw">

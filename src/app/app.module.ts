@@ -9,6 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+import { ContactService } from './core/services/contact.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 const MaterialModules = [
@@ -24,11 +26,12 @@ const MaterialModules = [
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
     MaterialModules
   ],
-  providers: [],
+  providers: [ContactService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

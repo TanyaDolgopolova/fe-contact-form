@@ -1,21 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IContactForm } from '../core/models/IContactForm';
+import { ContactService } from '../core/services/contact.service';
 
 @Component({
   selector: 'app-contact-form',
   templateUrl: './contact-form.component.html',
   styleUrls: ['./contact-form.component.scss']
 })
-export class ContactFormComponent implements OnInit {
+export class ContactFormComponent implements OnInit, OnDestroy {
+  private unsubscribe: Subject<any> = new Subject<any>();
+  
   contactForm: FormGroup;
 
   name: FormControl = new FormControl(null, [Validators.required, Validators.minLength(6)]);
-  email: FormControl = new FormControl(null, [Validators.required, 
-    Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]);
+  email: FormControl = new FormControl(null, [Validators.required, Validators.email]);
   message: FormControl = new FormControl(null, [Validators.required]);
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+    private contactService: ContactService) {
     this.contactForm = this.formBuilder.group({
       name: this.name,
       email: this.email,
@@ -25,6 +31,11 @@ export class ContactFormComponent implements OnInit {
 
   ngOnInit(): void { }
 
+  ngOnDestroy() {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
   async onSubmit() {
     if (!this.contactForm.valid) {
       alert('Fields are not valid');
@@ -33,7 +44,15 @@ export class ContactFormComponent implements OnInit {
 
     this.contactForm.disable();
     const data: IContactForm = this.contactForm.value;
-    
+    this.contactService.addContact(data)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => {
+        this.contactForm.enable();
+      }, 
+      (err: HttpErrorResponse) => {
+        alert(err.error.message);
+        this.contactForm.enable();
+      });
   }
 
 }
